@@ -20,6 +20,29 @@ st.markdown("""
     }
     div[data-testid="stMetricValue"] > div { color: #58a6ff !important; font-family: 'JetBrains Mono', monospace; }
     div[data-testid="stMetricLabel"] > div > p { color: #8b949e !important; }
+
+    /* Input fields dark theme */
+    input, .stNumberInput input, .stTextInput input {
+        background-color: #1c2128 !important;
+        color: #c9d1d9 !important;
+        border-color: #30363d !important;
+    }
+    .stSelectSlider [data-testid="stTickBarMin"],
+    .stSelectSlider [data-testid="stTickBarMax"] {
+        color: #8b949e !important;
+    }
+    .stSlider label, .stNumberInput label, .stTextInput label, .stSelectSlider label {
+        color: #c9d1d9 !important;
+    }
+    /* Selectbox / dropdowns */
+    [data-baseweb="select"], [data-baseweb="input"] {
+        background-color: #1c2128 !important;
+        border-color: #30363d !important;
+    }
+    [data-baseweb="select"] * { color: #c9d1d9 !important; }
+    /* Tabs, dividers, subheaders */
+    hr { border-color: #30363d !important; }
+    h1, h2, h3, .stSubheader { color: #c9d1d9 !important; }
     </style>
     """, unsafe_allow_html=True)
 
