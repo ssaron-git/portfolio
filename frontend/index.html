@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swiss Investor Intelligence Pro</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>&#x1f6e1;&#xfe0f; Strategie-Zentrale</h2>
+
+    <div class="input-group">
+      <label for="lookback">Analyse-Zeitraum</label>
+      <select id="lookback">
+        <option value="1">1 Jahr</option>
+        <option value="5">5 Jahre</option>
+        <option value="10" selected>10 Jahre</option>
+        <option value="15">15 Jahre</option>
+        <option value="20">20 Jahre</option>
+      </select>
+    </div>
+
+    <hr class="divider">
+    <h3>&#x1f3e6; Zins-Dashboard (März 2026)</h3>
+
+    <div class="input-group">
+      <label for="snb-rate">SNB (CH) %</label>
+      <input type="number" id="snb-rate" value="0.00" step="0.25">
+    </div>
+    <div class="input-group">
+      <label for="fed-rate">Fed (USA) %</label>
+      <input type="number" id="fed-rate" value="3.75" step="0.25">
+    </div>
+    <div class="input-group">
+      <label for="ecb-rate">EZB (EU) %</label>
+      <input type="number" id="ecb-rate" value="2.00" step="0.25">
+    </div>
+    <div class="input-group">
+      <label for="bank-margin">Bank-Marge: <span id="margin-val">0.15%</span></label>
+      <input type="range" id="bank-margin" min="0" max="0.50" step="0.05" value="0.15">
+    </div>
+
+    <hr class="divider">
+    <h3>&#x1f4c8; Assets</h3>
+
+    <div class="input-group">
+      <label for="ticker-input">Ticker Symbole (Yahoo)</label>
+      <input type="text" id="ticker-input" value="CSSP.SW, SWDA.SW, EIMI.SW, IWDC.SW, IUSE.SW">
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <h1>Swiss Investor Intelligence Pro</h1>
+    <p class="caption">Fokus: Vermögensaufbau für Einwohner der Schweiz (CHF)</p>
+
+    <!-- Metrics Row -->
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="label">USD / CHF</div>
+        <div class="value" id="metric-usd-val">--</div>
+        <div class="delta" id="metric-usd-delta">--</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">EUR / CHF</div>
+        <div class="value" id="metric-eur-val">--</div>
+        <div class="delta" id="metric-eur-delta">--</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Hedge Kosten USD</div>
+        <div class="value" id="metric-hedge-usd-val">--</div>
+        <div class="delta">p.a.</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Hedge Kosten EUR</div>
+        <div class="value" id="metric-hedge-eur-val">--</div>
+        <div class="delta">p.a.</div>
+      </div>
+    </div>
+
+    <!-- Charts + Strategy -->
+    <div class="charts-section">
+      <div>
+        <div class="chart-box" id="stock-chart-box">
+          <h3>Aktien-Performance (Normiert auf 100)</h3>
+          <canvas id="stock-chart"></canvas>
+        </div>
+        <div class="chart-box" id="currency-chart-box" style="margin-top: 24px;">
+          <h3>Währungs-Entwertung (Kaufkraft)</h3>
+          <canvas id="currency-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <h3>&#x1f3af; Strategie-Check</h3>
+        <p id="strategy-drag" style="margin: 8px 0; font-size: 14px;"><strong>USD Verlust:</strong> --</p>
+        <p id="strategy-cost" style="margin: 8px 0; font-size: 14px;"><strong>Hedge Kosten:</strong> --</p>
+        <div id="verdict" class="verdict-box">Lade...</div>
+      </div>
+    </div>
+
+    <!-- Calculator -->
+    <hr class="divider">
+    <h2 class="section-title">Anlagerechner</h2>
+    <p class="caption">Kalkulation nach Abzug von Inflation und Strategiekosten.</p>
+
+    <div class="calculator-section">
+      <div class="calc-inputs">
+        <h3>Parameter</h3>
+        <div class="input-group">
+          <label for="calc-start">Startkapital (CHF)</label>
+          <input type="number" id="calc-start" value="13000" step="1000">
+        </div>
+        <div class="input-group">
+          <label for="calc-monthly">Monatliche Sparrate (CHF)</label>
+          <input type="number" id="calc-monthly" value="3000" step="100">
+        </div>
+        <div class="input-group">
+          <label for="calc-years">Anlagezeitraum (Jahre)</label>
+          <input type="number" id="calc-years" value="20" step="1">
+        </div>
+        <div class="input-group">
+          <label for="calc-return">Erwartete Markt-Rendite: <span id="calc-return-val">7.0%</span></label>
+          <input type="range" id="calc-return" min="0" max="12" step="0.5" value="7">
+        </div>
+        <div class="input-group">
+          <label for="calc-inflation">Geschätzte Inflation: <span id="calc-inflation-val">1.2%</span></label>
+          <input type="range" id="calc-inflation" min="0" max="5" step="0.1" value="1.2">
+        </div>
+      </div>
+
+      <div class="calc-results">
+        <h3>Ergebnis</h3>
+        <div class="result-metric">
+          <div class="label">Endvermögen</div>
+          <div class="value" id="result-fv">--</div>
+        </div>
+        <div class="result-metric">
+          <div class="label">Reale Kaufkraft</div>
+          <div class="value" id="result-real">--</div>
+        </div>
+        <div class="result-metric">
+          <div class="sub" id="result-invested">Eingezahlt: --</div>
+          <div class="sub" id="result-basis">Basis: --</div>
+        </div>
+        <canvas id="calc-chart" style="margin-top: 16px;"></canvas>
+      </div>
+    </div>
+
+    <div class="footer">
+      Swiss Investor Intelligence | Version 2026.2 | Keine Anlageberatung.
+    </div>
+  </main>
+
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/calculator.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
